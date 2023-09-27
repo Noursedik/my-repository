@@ -9,6 +9,7 @@ static float price1=2.0, price2=3.5, price3=1.5, total_amount;
 
 /* Functions Prototypes*/
 void display_itmes(void);
+void admin_mode(void);
 
 int main()
 {
@@ -24,8 +25,13 @@ void display_itmes(void)// To diplay all details about the available items
     printf("%c, code: 1, price %-8.2f\n",item1,price1);
     printf("%c, code: 2, price %-8.2f\n",item2,price2);
     printf("%c, code: 3, price %-8.2f\n",item3,price3);
-    printf("Please select an item code or press 0 to cancel purchase\n");
+    printf("Please select an item code or press 0 to cancel purchase:\n");
     int item_code;
     scanf("%d",&item_code);
 }
-   
+void admin_mode(void)
+{  
+    printf("Please enter admin password:\n");
+    int passcode;
+    scanf("%d",&passcode);
+} 
