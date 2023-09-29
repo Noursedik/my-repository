@@ -10,6 +10,7 @@ static float price1=2.0, price2=3.5, price3=1.5, total_amount;
 /* Functions Prototypes*/
 void display_itmes(void);
 void admin_mode(void);
+void end_program(void);
 
 int main()
 {
@@ -35,3 +36,8 @@ void admin_mode(void)
     int passcode;
     scanf("%d",&passcode);
 } 
+void end_program(void)
+{
+    printf("Thank you");
+    return;
+}
