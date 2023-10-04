@@ -78,6 +78,8 @@ void pay(void){
     if (total_paid==amount_to_pay){
         ++total_sales;
         --quantity;
+        printf("The quantity now is: %d\n", quantity);
+        printf("The total sales now is:%f\n",total_sales);
         printf("Thank you for buying item %c, price %-8.2f\n",item_name,amount_to_pay);
         printf("You paid %-8.2f, No change",total_paid);
     }
@@ -85,6 +87,8 @@ void pay(void){
             if (total_paid>amount_to_pay){
                 ++total_sales;
                 --quantity;
+                printf("The quantity now is: %d\n", quantity);
+                printf("The total sales now is:%f\n",total_sales);
                 printf("Thank you for buying item %c, price %-8.2f\n",item_name,amount_to_pay);  
                 printf("The change is %-8.2f, please collect it",total_paid-amount_to_pay);
             }
