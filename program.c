@@ -3,9 +3,9 @@
 #include<math.h>
 #define min_amount 2 // The minimum amount of product
 /* Declaring the variables to be used in the program*/
-static int admin_password=67678;                                                           
+static int admin_password=67678,passcode;;                                                           
 static char item1='A', item2='B', item3='C',item_name;; 
-static float price1=2.0, price2=3.5, price3=1.5, total_sales,new_price;
+static float price1=2.0, price2=3.5, price3=1.5, total_quantitysales=0, totalsales=0,new_price;
 int item_code,quantity1=10,quantity2=10,quantity3=10;
 
 /* Functions Prototypes*/
@@ -18,6 +18,7 @@ void replenishsitems(void);
 void changeitemprice(void);
 void displaytotalsales(void);
 void display_itmes2(void);
+void enter_password(void);
 
 int main(){   
        int action;
@@ -30,13 +31,14 @@ int main(){
         display_itmes();
         break;
         case 2:
+        enter_password();
         admin_mode();
         break; 
         case 3:
         end_program();
         break;
         default:
-        printf("Invalid number");
+        printf("Invalid number\n");
         main();
         return(1);
         } 
@@ -82,10 +84,11 @@ void pay(void){
             }
     }
     if (total_paid==amount_to_pay){
-        ++total_sales;
-        printf("The total sales now is:%-8.2f\n",total_sales);
+        ++total_quantitysales;
+        printf("The total quantity sales now is:%-8.2f\n",total_quantitysales);
         printf("Thank you for buying item %c, price %-8.2f\n",item_name,amount_to_pay);
         printf("You paid %-8.2f, No change\n\n",total_paid);
+        totalsales+=amount_to_pay;
         switch(item_code){
         case 1:
         --quantity1;
@@ -102,10 +105,11 @@ void pay(void){
     }
         else{
             if (total_paid>amount_to_pay){
-                ++total_sales;
-                printf("The total sales now is:%-8.2f\n",total_sales);
+                ++total_quantitysales;
+                printf("The total quantity sales now is:%-8.2f\n",total_quantitysales);
                 printf("Thank you for buying item %c, price %-8.2f\n",item_name,amount_to_pay);  
                 printf("The change is %-8.2f, please collect it\n\n",total_paid-amount_to_pay);
+                totalsales+=amount_to_pay;
                 switch(item_code){
                 case 1:
                 --quantity1;
@@ -175,7 +179,7 @@ void display_itmes(void)// To diplay all details about the available items
         pruchase_confirmation();
         break;
         case 0:
-        printf("The purchase is cancelled");
+        printf("The purchase is cancelled\n");
         main();
         return;
         break;
@@ -241,11 +245,11 @@ void changeitemprice(void){
 
 void displaytotalsales(void){
     int reset;
-    printf("The total sales:%-8.2f\n",total_sales);
+    printf("The total sales:%-8.2f\n",totalsales);
     printf("Would you like to reset the total sales to 0?\n(1-Yes,0-No)");
     scanf("%d",&reset);
     if (reset==1)
-    total_sales=0;
+    totalsales=0;
     else {
         if(reset==0)
         ;
@@ -284,12 +288,16 @@ else {
     return;
 }
 
-
+void enter_password(void)
+{
+    printf("Please enter admin password:\n");
+    scanf("%d",&passcode);
+    return;
+}
 void admin_mode(void)
 {  
-    printf("Please enter admin password:\n");
-    int passcode,option;
-    scanf("%d",&passcode);
+    
+    int option;
     if(passcode==admin_password){
         printf("Please select one of the following actions\n");
         printf("1-Replenish Items\n2-Change Item Prices\n3-Display Total Sale\n4-Display Item Availability\n0-Exit Admin Mode\n");
