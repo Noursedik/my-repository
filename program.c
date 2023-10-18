@@ -22,15 +22,22 @@ int arr1[5];
 int arr4[SIZE];
 int arr6[]={1,2,3,3,4};
 int arr2[]={10,20,30,40,50};
+int arr3[]={10,20,30,40,50};
+int arr7[]={10,20,30,40,50};
 int duplicate_found;
 int arr2d[nRows][nCols]={{1,2,3},{1,2,3},{1,2,3},{1,2,3},{1,2,3},{1,2,3},{1,2,3},{1,2,3}};
 set_array(arr1,5); //testing set_array function 
 rem_align(arr2,5,2); //testing rem_align function 
-insert_align(arr2,5,2,80); //testing insert_align function 
+insert_align(arr3,5,2,80); //testing insert_align function 
 reshape(arr4,SIZE,arr2d); //testing reshape function 
 print_trans_matrix(arr2d); //testing print_trans_matrix function 
 duplicate_found=found_duplicate(arr6,5); //testing found_duplicate function
-printf("%d",duplicate_found); //printig if a duplicate in the array is found or not  
+printf("%d\n",duplicate_found); //printig if a duplicate in the array is found or not
+int outputarray[5];
+flip_array(arr7,5,outputarray);////testing flip_array function
+for(int i=0;i<5;i++){
+    printf("%d\n",outputarray[i]);
+}
 return 0;
 }
 /*sets the value of each array element to its index in the array*/
@@ -126,9 +133,8 @@ bool found_duplicate(int arr[],int length){
 /*returns true if there is at least a duplicate values in arr; otherwise returns false*/
 void flip_array(int arr[], int length,int outputarray[]){
     int i,index=0;
-    for(i<length;i>0;i--){
+    for(i=length-1;i>=0;i--){
         outputarray[index++]=arr[i];
-        printf("%d",outputarray[index++]);
     }
     return;
 }
