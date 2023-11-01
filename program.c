@@ -1,152 +1,231 @@
-/*Question 1*/
+/*Question 2*/
 /*Pre-Processor Directives*/
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
-#include<math.h>
-#define SIZE 24
-#define nRows 8
-#define nCols 3
-/*Functions Prototypes*/
-void set_array(int arr [], int length);
-void rem_align(int arr[],int length, int pos);
-void insert_align(int arr[],int length, int pos, int value);
-void reshape(int arr[],int length,int arr2d[nRows][nCols]);
-void print_trans_matrix(int arr2d[nRows][nCols]);
-bool found_duplicate(int arr[],int length);
-void flip_array(int arr[], int length,int outputarray[]);
+#define numOfSubjects 3
+#define numOfStudents 10
+/*Data structure definition*/
+typedef struct {
+    char FirstName[20];
+    char LastName[20];
+    int StudentID;
+    float SubjectMarks[numOfSubjects];
+    int AggregateMarks;
+    char Grade[10];
+} StudentRecord;
+/*An array declared with size equal to number of students, for each element has the data structure StudentRecord */
+StudentRecord studentList[numOfStudents];
+/*Functions prototypes*/
+void enrol();
+void searchUpdate();
+void topStudents();
 
-/*Main function to test the user defined functions*/
-int main(){
-/*declaring arrays and variables that will help to test the functions*/
-int arr1[SIZE];
-int duplicate_found;
-int arr2d[nRows][nCols];
-set_array(arr1,SIZE); //testing set_array function 
-rem_align(arr1,SIZE,2); //testing rem_align function 
-insert_align(arr1,SIZE,2,80); //testing insert_align function 
-reshape(arr1,SIZE,arr2d); //testing reshape function 
-print_trans_matrix(arr2d); //testing print_trans_matrix function 
-duplicate_found=found_duplicate(arr1,SIZE); //testing found_duplicate function
-printf("%d\n",duplicate_found); //printig if a duplicate in the array is found or not
-int outputarray[SIZE];
-flip_array(arr1,SIZE,outputarray);////testing flip_array function
-return 0;
+/*Main function*/
+int main() {
+    int choice;
+    printf("Welcome to Year2 Univerity system\n");
+    printf("1. Enrol\n2. Search/Update\n3. Top Students\n4. Exit\n");
+    scanf("%d", &choice);
+/*Checking user choice to know which process he/she are wiling to do*/
+    switch (choice) {
+        case 1:
+            enrol();
+            main();
+            break;   
+        case 2:
+            searchUpdate();
+            main();
+            break;
+        case 3:
+            topStudents();
+            main();
+            break;
+        case 4:
+            return(1);
+        default:
+            printf("Invalid Choice.\n");
+            main();
+    }
 }
 
+/*Enrol Funtcion*/
+void enrol() {
+    int id;
+    printf("Enter Student ID: ");//allowing user to enter student Id
+    scanf("%d", &id);
+    int index = -1;
+    //Check in the student Id aray if this student already exists
+    for (int i = 0; i < numOfStudents; i++) {
+        if (studentList[i].StudentID == id) {
+            index = i;
+            break;
+        }
+    }
+    //If student doesn't exist allow user to enter student details as per the data structure
+    if (index == -1) {
+        for (int i = 0; i < numOfStudents; i++) {
+            if (studentList[i].StudentID == 0) {
+                index = i;
+                studentList[i].StudentID = id;
+                printf("Enter First Name: ");
+                scanf("%s", studentList[i].FirstName);
+                printf("Enter Last Name: ");
+                scanf("%s", studentList[i].LastName);
+                for (int j = 0; j < numOfSubjects; j++) {
+                    printf("Enter Subject %d Mark (or -1 to skip): ", j);
+                    scanf("%f", &studentList[i].SubjectMarks[j]);//allowing the user to inpt each subject mark for the student
+                    //checking if the mark entered is within the accepted mark range
+                    if(studentList[i].SubjectMarks[j]<-1 || studentList[i].SubjectMarks[j]>100){
+                        printf("Invalid subject mark, please re-enter a valid mark from 0-100\n");//if mark is invalid, allow user to re-enter the mark for the subject
+                        printf("Enter Subject %d Mark (or -1 to skip): ", j);
+                        scanf("%f", &studentList[i].SubjectMarks[j]);
+                    }
+                }
+                /*Calculating the total marks if all subject marks are inputed*/
+                float total = 0;
+                for (int j = 0; j < numOfSubjects; j++) {
+                    if (studentList[i].SubjectMarks[j] != -1) {
+                        total += studentList[i].SubjectMarks[j];
+                    }
+                    else {
+                        total=0;
+                        break;
+                    }
+                }
+                /*Printing the grade for the student depending on their Average Mark*/
+                if (total == 0) {
+                    studentList[i].AggregateMarks = -1;
+                    strcpy(studentList[i].Grade, "undefined");
+                } else {
+                    studentList[i].AggregateMarks = (int)(total/numOfSubjects);
+                    if ((total/numOfSubjects) >= 85) {
+                        strcpy(studentList[i].Grade, "HD");
+                    } else if ((total/numOfSubjects) >= 75) {
+                        strcpy(studentList[i].Grade, "D");
+                    } else if ((total/numOfSubjects) >= 65) {
+                        strcpy(studentList[i].Grade, "C");
+                    } else if ((total/numOfSubjects) >= 50) {
+                        strcpy(studentList[i].Grade, "P");
+                    } else {
+                        strcpy(studentList[i].Grade, "F");
+                    }
+                }
+                break;
+            }
+        }
+    } else {
+        printf("Student ID already exists.\n");
+    }
+}
 
-/*sets the value of each array element to its index in the array*/
-void set_array(int arr [], int length){
-    printf("Seting the array Values:\n");
-    for(int i=0;i<length;i++){
-            arr[i]=i;
-            printf("%d ",arr[i]);
-    }
-    printf("\n");
-    return;
-}
-/* removes the array element at index pos by moving its following array elements one index up in the array*/
-void rem_align(int arr[],int length, int pos){
-    printf("Removing the element at position %d \n",pos);
-    int i;
-    if(pos>length-1||pos<0){
-            printf("The position entered is not within the size of the array\n");
-            return;
+/*Search Update Function*/
+void searchUpdate() {
+    int choice;
+    printf("Search by:\n1. Student ID\n2. Last Name\n");//allow the user to choose to search by student Id or Last name
+    scanf("%d", &choice);
+    int index = -1;
+    if (choice == 1) {
+        int id;
+        printf("Enter Student ID: ");
+        scanf("%d", &id);
+        /*Checking if the studentId already exists or not*/
+        for (int i = 0; i < numOfStudents; i++) {
+            if (studentList[i].StudentID == id) {
+                index = i;
+                break;
+            }
         }
-    for(i=pos;i<length;i++){
-        if(i==length-1){
-            arr[i]=arr[length-1];
+    } else if (choice == 2) {
+        char name[20];
+        printf("Enter Last Name: ");
+        scanf("%s", name);
+        /*Checking if the last name already exists or not*/
+        for (int i = 0; i < numOfStudents; i++) {
+            if (strcasecmp(studentList[i].LastName, name) == 0) {//not case sensitive
+                index = i;
+                break;
+            }
         }
-        else {
-            arr[i] = arr[i + 1];
+    }else {
+        printf("Invalid number,please try again\n");
+        searchUpdate();
+    }
+    if (index == -1) {
+        printf("Student not found.\n");
+    } else {
+        /*Printing all student informatio as per the data structure*/
+        printf("Student Found:\n");
+        printf("First Name: %s\n", studentList[index].FirstName);
+        printf("Last Name: %s\n", studentList[index].LastName);
+        printf("Student ID: %d\n", studentList[index].StudentID);
+        printf("Subject Marks: ");
+        for (int i = 0; i < numOfSubjects; i++) {
+            printf("%.2f ", studentList[index].SubjectMarks[i]);
         }
-    }
-    for(i=0;i<length;i++){
-        printf("%d\n",arr[i]);
-    }
-    return;
-}
-/* inserts the prameter value at the array 
-index pos while moving down by one positon the original array elements from index pos onwards,*/
-void insert_align(int arr[], int length, int pos, int value) {
-    printf("Inserting value %d at position %d \n",value,pos);
-    int i;
-    if (pos < 0 || pos >= length) {
-        printf("The position entered is not within the size of the array\n");
-        return;
-    }
-    for ( i = length - 1; i > pos; --i) {
-        arr[i] = arr[i - 1];
-    }
-    arr[pos] = value;
-    for(i=0;i<length;i++){
-        printf("%d\n",arr[i]);
-    }
-    return;
-}
-/* copy the elements of the 1-D array arr into arr2d, row by row.*/
-void reshape(int arr[],int length,int arr2d[nRows][nCols]){
-    printf("Converting the 1D array to a 2D array\n");
-    int i,j,index=0;
-    if(length!=(nRows*nCols)){ //checks if the number of elememts in the 2D array will fit in the size of the 1D array
-        printf("The length of the 1D array is not equal to the multiplication of the\nnumber of rows and columns of the 2D array ");
-        return;
-    }
-    else{
-        for(i=0;i<nRows;i++){
-            for(j=0;j<nCols;j++){
-                arr2d[i][j]=arr[index];
-                index++;
+        printf("\nAggregate Marks: %d\n", studentList[index].AggregateMarks);
+        printf("Grade: %s\n", studentList[index].Grade);
+        printf("Update Student Record? (Y/N): ");//allowing the user to update student information
+        char update;
+        scanf(" %c", &update);
+        /*Checking and updating student information*/
+        if (update == 'Y' || update == 'y') {
+            printf("Enter First Name: ");
+            scanf("%s", studentList[index].FirstName);
+            printf("Enter Last Name: ");
+            scanf("%s", studentList[index].LastName);
+            for (int j = 0; j < numOfSubjects; j++) {
+                printf("Enter Subject %d Mark (or -1 to skip): ", j);
+                scanf("%f", &studentList[index].SubjectMarks[j]);
+                if(studentList[index].SubjectMarks[j]<-1 || studentList[index].SubjectMarks[j]>100){
+                    printf("Invalid subject mark, please re-enter a valid mark from 0-100\n");
+                    printf("Enter Subject %d Mark (or -1 to skip): ", j);
+                    scanf("%f", &studentList[index].SubjectMarks[j]);
+                }
+            }
+            /*Calculating the total marks if all subject marks are inputed*/
+            float total = 0;
+            for (int j = 0; j < numOfSubjects; j++) {
+                if (studentList[index].SubjectMarks[j] != -1) {
+                    total += studentList[index].SubjectMarks[j];
+                }
+            }
+            /*Printing the grade for the student depending on their Average Mark*/
+            if (total == 0) {
+                studentList[index].AggregateMarks = -1;
+                strcpy(studentList[index].Grade, "undefined");
+            } else {
+                studentList[index].AggregateMarks = (int)(total/numOfSubjects);
+                if ((total/numOfSubjects) >= 85) {
+                    strcpy(studentList[index].Grade, "HD");
+                } else if ((total/numOfSubjects) >= 75) {
+                    strcpy(studentList[index].Grade, "D");
+                } else if ((total/numOfSubjects) >= 65) {
+                    strcpy(studentList[index].Grade, "C");
+                } else if ((total/numOfSubjects) >= 50) {
+                    strcpy(studentList[index].Grade, "P");
+                } else {
+                    strcpy(studentList[index].Grade, "F");
+                }
             }
         }
     }
-   for(i=0;i<nRows;i++){
-       printf("row %d:",i);
-        for(j=0;j<nCols;j++){
-            printf("%d ",arr2d[i][j]);
-        }
-    printf("\n");
-   }
-    return;
 }
-/*print the values of arr2d column by column; each column in a new line.*/
-void print_trans_matrix(int arr2d[nRows][nCols]){
-    printf("Printing the 2D array column by column\n");
-    int i,j;
-    for(j=0;j<nCols;j++){
-        printf("column %d:",j);
-            for(i=0;i<nRows;i++){
-                printf("%d ",arr2d[i][j]);
-                
-            }
-        printf("\n");
-    }
-    return;
-}
-/*returns true if there is at least a duplicate values in arr; otherwise returns false*/
-bool found_duplicate(int arr[],int length){
-    printf("Checking if duplicates are found\nif yes return 1, if no return 0\n");
-    int i,j;
-    for(i=0;i<length;i++){
-        for(j=i+1;j<length;j++){
-            if(arr[i]==arr[j]){
-                return true;
-            }
-        }
-    }
-    return false;
-}
-/*returns true if there is at least a duplicate values in arr; otherwise returns false*/
-void flip_array(int arr[], int length,int outputarray[]){
-    printf("Flipping the 1D array\n");
-  int index=0;
-  for(int i=(length-1);i>=0;i--){
-      outputarray[index]=arr[i];
-      index++;
-  }
-  for(int i=0;i<SIZE;i++){
-    printf("%d\n",outputarray[i]);
-}
-  return;
-}
-     
 
+/*Top Student Function*/
+void topStudents() {
+    //searching for the maximum average mark 
+    int max = -1;
+    for (int i = 0; i < numOfStudents; i++) {
+        if (studentList[i].AggregateMarks > max) {
+            max = studentList[i].AggregateMarks;
+        }
+    }
+    printf("Top Students:\n");
+    //printing all the details of all students who got the maximum average mark
+    for (int i = 0; i < numOfStudents; i++) {
+        if (studentList[i].AggregateMarks == max) {
+            printf("%s %s (ID: %d) - Aggregate Marks: %d, Grade: %s\n", studentList[i].FirstName, studentList[i].LastName, studentList[i].StudentID, studentList[i].AggregateMarks, studentList[i].Grade);
+        }
+    }
+}
