@@ -19,6 +19,7 @@ int main(){
     shuffle_elements(array,size);
    recursiveShuffle(array2,0,size-1);
    /*printing the recursively shuffled array*/
+   printf("\n");
    printf("Shuffled Array: ");
     for (int i = 0; i < size; ++i) {
         printf("%d ", array2[i]);
@@ -73,4 +74,6 @@ void recursiveShuffle(int arr[], int left, int right) {
 
     recursiveShuffle(arr, left, mid);//recalling the function to check from left to middle
     recursiveShuffle(arr, mid + 1, right);//recalling the function to check from middle +1 to right 
+    return;
 }
+/*Question 2*/
