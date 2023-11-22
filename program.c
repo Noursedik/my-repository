@@ -76,4 +76,43 @@ void recursiveShuffle(int arr[], int left, int right) {
     recursiveShuffle(arr, mid + 1, right);//recalling the function to check from middle +1 to right 
     return;
 }
-/*Question 2*/
+
+/*Question 3*/
+#include<iostream>
+#include<iomanip>
+#include <cstdlib> 
+using namespace std;
+
+template< typename T >
+T update_scale(T &m1, T &m2, T m3=10);
+
+void print_real( float number, int fieldspace, int precision);
+
+int main(void){
+float  a, b;
+cout<<" Please input two real numbers";
+cin>>a>>b;	
+
+print_real(a,7,3);
+print_real(b,7,3);
+// call the function update_scale with ONLY the actual parameters a  and b
+update_scale(a,b);
+print_real(a,7,3);
+print_real(b,7,3);
+	
+}
+
+/* complete the body of the function */
+void print_real( float number, int fieldspace, int precision){
+    cout<<fixed<<setw(fieldspace)<<setprecision(precision)<<number<<endl;
+
+}
+
+// add the function defintion (header+body) of the template function update_scale
+template< typename T >
+T update_scale(T &m1, T &m2, T m3){
+    T originalm1=m1;
+    T originalm2=m2;
+    m1=(originalm1+originalm2)*m3;
+    m2=(originalm1-originalm2)*m3;
+}
