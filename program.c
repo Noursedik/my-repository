@@ -76,12 +76,13 @@ void recursiveShuffle(int arr[], int left, int right) {
     recursiveShuffle(arr, mid + 1, right);//recalling the function to check from middle +1 to right 
     return;
 }
- 
- 
- #include <stdio.h>
+ /*Question 2*/
+#include <stdio.h>
 #include <stdlib.h>
+
+
 //Function to read the image pixel values from a text PGM file
- void readPGM(char* filename, int** image, int* width, int* height) {
+ void readPGM(char* filename, int** image, int* width, int* height,int*max_value) {
   
    char comments[256];
    
@@ -106,6 +107,7 @@ void recursiveShuffle(int arr[], int left, int right) {
 
     }
     fscanf(file, "%d %d", width, height);
+    fscanf(file, "%d", max_value);
     
     *image = (int*)malloc((*width) * (*height) * sizeof(int));
     for (int i = 0; i < (*width) * (*height); i++) {
@@ -126,7 +128,7 @@ void writePGM(char* filename, int* image, int width, int height) {
 
     // Write the pixel values
     for (int i = 0; i < width * height; i++) {
-        fprintf(file, "%d ", image[i]);
+        fprintf(file, "%d ", *(image+i));
     }
 
     fclose(file);
@@ -136,21 +138,24 @@ void writePGM(char* filename, int* image, int width, int height) {
 void histogramEqualisation(int* image, int width, int height) {
     // Calculate the histogram
     int histogram[256] = {0};
-    for (int i = 0; i < width * height; i++) {
-        histogram[image[i]]++;
+    for (int i = 0; i < (width * height)-1; i++) {
+        histogram[*(image+i)]++;
     }
 
     // Calculate the cumulative distribution function (CDF)
     int cdf[256] = {0};
     cdf[0] = histogram[0];
-    for (int i = 1; i < 256; i++) {
+    for (int i = 1; i <255; i++) {
         cdf[i] = cdf[i - 1] + histogram[i];
     }
-
+ int totalPixels = width * height;
+    for(int i=0;i<255;i++){
+        cdf[i]=(cdf[i]*255)/totalPixels;
+    }
     // Perform histogram equalisation
-    int totalPixels = width * height;
-    for (int i = 0; i < width * height; i++) {
-        image[i] = (cdf[image[i]] * 255) / totalPixels;
+   
+    for (int i = 0; i < (width * height)-1; i++) {
+        *(image+i) = (cdf[*(image+i)]);
     }
 }
 
@@ -158,18 +163,17 @@ int main() {
     char* inputFile = "Rain_Tree.pgm";
     char* outputFileText = "Rain_Tree_equalized_text.pgm";
 
-    int width, height;
+    int width, height,max_value;
     int* image;
 
     // Read the input image
-    readPGM(inputFile,&image,&width,&height);
+    readPGM(inputFile,&image,&width,&height,&max_value);
 
     // Perform histogram equalisation
     histogramEqualisation(image, width, height);
 
     // Write the equalized image to text PGM file
     writePGM(outputFileText, image, width, height);
-
     // Free the allocated memory
     free(image);
      return 0;
