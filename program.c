@@ -187,21 +187,21 @@ int main() {
 using namespace std;
 
 template< typename T >
-T update_scale(T &m1, T &m2, T m3=10);
+void update_scale(T &m1, T &m2, T m3=10);
 
 void print_real( float number, int fieldspace, int precision);
 
 int main(void){
 float  a, b;
-cout<<" Please input two real numbers";
-cin>>a>>b;	
+cout<<" Please input two real numbers ";
+cin>>a>>b; //inputting 2 numbers
 
-print_real(a,7,3);
-print_real(b,7,3);
+print_real(a,7,3); //priting number with specific formatting
+print_real(b,7,3); //priting number with specific formatting
 // call the function update_scale with ONLY the actual parameters a  and b
-update_scale(a,b);
-print_real(a,7,3);
-print_real(b,7,3);
+update_scale(a,b); //updatin both numbers
+print_real(a,7,3); //priting the updated number with specific formatting
+print_real(b,7,3); //priting the updated number with specific formatting
 	
 }
 
@@ -213,7 +213,7 @@ void print_real( float number, int fieldspace, int precision){
 
 // add the function defintion (header+body) of the template function update_scale
 template< typename T >
-T update_scale(T &m1, T &m2, T m3){
+void update_scale(T &m1, T &m2, T m3){
     T originalm1=m1;
     T originalm2=m2;
     m1=(originalm1+originalm2)*m3;
