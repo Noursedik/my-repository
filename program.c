@@ -95,7 +95,7 @@ void recursiveShuffle(int arr[], int left, int right) {
      char format[3];
      fscanf(file, "%s", format);
     if (format[0] != 'P' || format[1] != '2') {// reading the file header and making sure it is a pgm
-        printf("Invalid PGM file format!");//reading the comments fromthe file
+        printf("Invalid PGM file format!");//reading the comments from the file
         return;
     }
 
@@ -196,12 +196,12 @@ float  a, b;
 cout<<" Please input two real numbers ";
 cin>>a>>b; //inputting 2 numbers
 
-print_real(a,7,3); //priting number with specific formatting
-print_real(b,7,3); //priting number with specific formatting
+print_real(a,7,3); //printing number with specific formatting
+print_real(b,7,3); //printing number with specific formatting
 // call the function update_scale with ONLY the actual parameters a  and b
-update_scale(a,b); //updatin both numbers
-print_real(a,7,3); //priting the updated number with specific formatting
-print_real(b,7,3); //priting the updated number with specific formatting
+update_scale(a,b); //updating both numbers
+print_real(a,7,3); //printing the updated number with specific formatting
+print_real(b,7,3); //printing the updated number with specific formatting
 	
 }
 
