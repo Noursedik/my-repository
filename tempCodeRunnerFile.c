@@ -17,7 +17,7 @@
      char format[3];
      fscanf(file, "%s", format);
     if (format[0] != 'P' || format[1] != '2') {// reading the file header and making sure it is a pgm
-        printf("Invalid PGM file format!");//reading the comments fromthe file
+        printf("Invalid PGM file format!");//reading the comments from the file
         return;
     }
 

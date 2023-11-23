@@ -85,7 +85,7 @@ void recursiveShuffle(int arr[], int left, int right) {
   
    char comments[256];
    
-   FILE* file = fopen("Rain_tree.pgm", "r");//opening the file and checking if it opened
+   FILE* file = fopen(filename, "r");//opening the file and checking if it opened
      if (&file == NULL) {
       printf("Error opening file!");
          return;
